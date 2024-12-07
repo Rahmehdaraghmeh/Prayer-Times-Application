@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Times Application
+    </title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body >
+    <div style="margin-top:50px; ">
+        
+<!-- city name  -->
+<div  style="color: white; margin-right: 39px;">
+    <h1 id="city-name">الرياض</h1>
+    <h6 style="font-size: 29px; font-weight: 200;" id="day"> السبت 7 ديسمبر</h6>
+</div><!-- city name  -->
+<hr >
+<!-- time pray -->
+ <div id="time-pray">
+    <div class="card">
+        <div class="headerr"> 
+            <h3 >الفجر</h3>
+       </div>  
+       <div class="time" id="Fajr">04.30</div>      
+    </div> 
+    <div class="card">
+        <div class="headerr"> 
+            <h3 >الشروق</h3>
+       </div>  
+       <div class="time" id="Sunrise">5.30</div>      
+    </div>
+    <div class="card">
+        <div class="headerr"> 
+            <h3 >الظهر</h3>
+       </div>
+       <div class="time" id="Dhuhr"
+       ">11.30</div>      
+
+    </div>
+    <div  class="card">
+        <div class="headerr"> 
+            <h3 >العصر</h3>
+       </div>   
+       <div class="time" id="Asr">02.30</div>      
+     
+    </div>
+    <div class="card">
+     <div class="headerr"> 
+         <h3 >المغرب</h3>
+    </div>
+    <div class="time" id="Maghrib" >04.30</div>      
+
+        
+    </div>
+    <div class="card">
+        <div class="headerr"> 
+            <h3 >العشاء</h3>
+       </div>
+       <div class="time" id="Isha">05.30</div>      
+
+    </div>
+ </div>
+ <!-- change city select  -->
+  <div class="cities">
+    <select name="city" id="city">
+</select>
+  </div>
+        </div>
+    
+    <script src="./node_modules/axios/dist/axios.min.js" ></script>
+
+     <script>  
+     let cites=['Nablus','Tubas','Gaza','Jerusalem']
+     for (let city of cites) {
+        const content=  `
+        <option>${city}</option>
+        `
+        document.getElementById('city').innerHTML+=content
+     }
+     document.getElementById('city').addEventListener("change", function(){
+        cityName(this.value)
+     })
+
+     const Isha=document.getElementById("Isha");
+     const Maghrib=document.getElementById("Maghrib");
+     const Asr=document.getElementById("Asr");
+     const Dhuhr=document.getElementById("Dhuhr");
+     const Sunrise=document.getElementById("Sunrise");
+     const Fajr=document.getElementById("Fajr");
+     const city=document.getElementById("city-name");
+     const day=document.getElementById("day");
+function cityName(cityname){
+     let params={
+            country:"PS",
+            city:cityname
+        }
+        axios.get('http://api.aladhan.com/v1/timingsByCity', {
+    params:params
+  })
+  .then(function (response) {
+    console.log(response.data.data);
+    Isha.innerHTML=response.data.data.timings.Isha;
+    Maghrib.innerHTML=response.data.data.timings.Maghrib;
+    Asr.innerHTML=response.data.data.timings.Asr;
+    Dhuhr.innerHTML=response.data.data.timings.Dhuhr;
+    Sunrise.innerHTML=response.data.data.timings.Sunrise;
+    Fajr.innerHTML=response.data.data.timings.Fajr;
+    city.innerHTML=response.data.data.meta.timezone
+    day.innerHTML=response.data.data.date.hijri.weekday.ar ;
+    day.innerHTML+= "  " +response.data.data.date.readable
+  })
+  .catch(function (error) {
+    console.log(error);
+  })}
+    </script>
+</body>
+</html>
